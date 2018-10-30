@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from libreria.models import Genere, Autore,     Libro
+from libreria.models import Genere, Autore, Libro
 from django.http import HttpResponse
 from django.shortcuts import render_to_response         #SERVE PER VISUALIZZARE LA PAGINA HTML
 from django.shortcuts import get_object_or_404          #SERVE A RITORNARE NELLA PAGINA HTML SE NON ESISTE QUEL OGGETTO
