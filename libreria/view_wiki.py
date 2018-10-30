@@ -10,6 +10,6 @@ class WikiRicerca(forms.Form):
         choices=[(autore.pk, autore) for autore in Autore.objects.all()]
     ))
 
-    
+
 
 
