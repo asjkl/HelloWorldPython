@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 import HelloWorld.views as views
 import libreria.views as Lv
+import libreria.view_wiki as Lvw
 
 # Bisogna importare le viste tramite views.[qualcosa] e non
 # tramite una stringa "views.benvenuto"
@@ -27,7 +28,8 @@ urlpatterns = [
     url(r'^benvenuto/$', views.benvenuto),
     url(r'^libri/$', Lv.tuttiLibri),
     url(r'^libri/(\d*)/$', Lv.restiuisciLibro),
-    url(r'libri/acquisti/(?P<anno>\d{4})/$', Lv.restituisciPerDataAcquisto),
-    url(r'libri/autori/(\d+)/$', Lv.restituisciTuttiIlibriDiQuestoAutore),
-    url(r'libri/generi/(\d+)/$', Lv.restituisciTuttiILibriPerQuelGenere),
+    url(r'^libri/acquisti/(?P<anno>\d{4})/$', Lv.restituisciPerDataAcquisto),
+    url(r'^libri/autori/(\d+)/$', Lv.restituisciTuttiIlibriDiQuestoAutore),
+    url(r'^libri/generi/(\d+)/$', Lv.restituisciTuttiILibriPerQuelGenere),
+    url(r'^libri/ricerca/$', Lvw.ricerca),
 ]

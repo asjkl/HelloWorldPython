@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title%} Ricerca wikipedia {% endblock %}
+</head>
+<body>
+{% block content %}
+    <form action="." method="POST">
+
+        {{ form.as_p }}
+
+        <input type="submit" value="Cerca"/>
+    </form>
+
+    {% if risultati %}
+        <h1>{{risultati|length %}</h1>
+        <ul>
+            {% for ris in risultati %}
+                <li> {{ris.title}}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+</body>
+</html>
