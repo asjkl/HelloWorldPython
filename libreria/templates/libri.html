@@ -1,0 +1,16 @@
+{% if autore %}
+    <h1>Autore: {{autore}}</h1>
+{% elif genere %}
+    <h1>Genere: {{genere}}</h1>
+{% else %}
+<h1>La mia libreria</h1>
+{%endif%}
+
+<dl>
+    {% for libro in libri %}
+        <dt><strong>"{{ libro.Nome }}"</strong></dt>
+            <dd> Autore: <a href="autori/{{libro.Autori.id}}">{{libro.Autori}}</a></dd>
+            <dd> Genere: <a href="generi/{{libro.Genere.id}}">{{libro.Genere}}</a></dd>
+            <dd>Data acquisto: {{libro.Data_acquisto|date:"j F \d\e\l Y"}}</dd>
+    {% endfor %}
+</dl>
