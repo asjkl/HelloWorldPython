@@ -42,11 +42,9 @@ list_id_generi.append(g5.id)
 #    print x
 
 l1 = Libro(Nome="Libro1")
-l1.Autori_id=list_id_autori[0]                 #RELAZIONE UNO A MOLTI
-l1.Autori_id=list_id_autori[1]
-l1.Generi_id=list_id_generi[0]
-l1.Generi_id=list_id_generi[1]
 l1.save()
+l1.autore.save(a1,a2,a3)
+l1.genere.save(g2,g3)
 
 #Autore.objects.all()                                                    #RESTITUISCI TUTTI GLI AUTORI
 #for a in Autore.object.all().order_by("descrizione")                    #ORDINAMI TUTTI GLI AUTORI PER "descrizione"

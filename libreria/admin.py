@@ -5,11 +5,12 @@ from django.contrib import admin
 
 #QUI DENTRO VADO AD INSERIRE I MODELLI DOVE POSSO GESTIRLI DALL'INTERFACCIA DELL'ADMIN
 
-class visualizzaLibriInModoOrdinato(admin.ModelAdmin):
-    list_display = ('Nome', 'Autori', 'Genere', 'Data_acquisto')
+#class visualizzaLibriInModoOrdinato(admin.ModelAdmin):
+#    list_display = ('Nome', 'Autori', 'Genere', 'Data_acquisto')
 
 admin.site.register(Autore)
-admin.site.register(Libro, visualizzaLibriInModoOrdinato)
+#admin.site.register(Libro, visualizzaLibriInModoOrdinato)
+admin.site.register(Libro)
 admin.site.register(Genere)
 
 

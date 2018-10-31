@@ -131,8 +131,8 @@ class Genere(models.Model):
 
 class Libro(models.Model):
     nome = models.CharField(max_length=50, null=True, name="Nome")
-    autore = models.ForeignKey(Autore, null=True, name="Autori")
-    genere = models.ForeignKey(Genere, null=True, name="Genere")
+    autore = models.ManyToManyField(Autore, name="autore")
+    genere = models.ManyToManyField(Genere, name="genere")
     dataPubblicazione = models.DateField(null=True, name="Data")
     dataAcquisto = models.DateField(null=True, name="Data_acquisto")
 
