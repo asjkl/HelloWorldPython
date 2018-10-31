@@ -7,40 +7,44 @@ from django.shortcuts import HttpResponse
 from json import JSONDecoder  # JSON :)
 from django.views.decorators.csrf import csrf_exempt
 
+wiki_url_api = "https://%s.wikipedia.org/w/api.php?action=query&format=json&srlimit=%s&list=search&srsearch=%s"
+wiki_link = "https://%s.wikipedia.org/wiki/"
 
-
-wiki_url_api = "https://%.wikipedia.org/w/api.php?action=query&format=json&srlimit=%&list=search&srsearch=%"
-wiki_link = "https://%.wikipedia.org/wiki/"
-
+dizionarioLingua={0:"it",
+                  1:"en"}
 
 class WikiRicerca(forms.Form):
+
     autore = forms.IntegerField(widget=forms.Select(
         choices=[(autore.pk, autore) for autore in Autore.objects.all()]
     ))
 
     wikipedia = forms.IntegerField(widget=forms.RadioSelect(
-        choices=(("it", "Italiano"), ("en", "Inglese"))
+        choices=((0, "Italiano"), (1, "Inglese"))
     ))
 
     limite = forms.IntegerField(initial=10, widget=forms.RadioSelect(
         choices=((10, "10"), (50, "50"), (100, "100"))
     ))
 
+    def clean_limite(self):
+        if (self.cleaned_data['limite'] > 50 and self.cleaned_data['wikipedia'] == 1):
+            raise forms.ValidationError("Massimo 50 risultati in Inglese")
+        return self.cleaned_data['limite']
+
 @csrf_exempt
 def ricerca(request):
     risultati = link = None
     if request.method == 'POST':
         form = WikiRicerca(request.POST)
-        print("ciao11")
         if form.is_valid():
-            print("ciao")
-            autoreDaCercare = get_object_or_404(Autore, pk=form.cleaned_data['autore'])
-            url = wiki_url_api % (form.cleaned_data['wikipedia'], form.cleaned_data['limite'], autoreDaCercare.cognome)
-            link = wiki_link % form.cleaned_data['wikipedia']
+            autoreDaCercare = Autore.objects.get(pk=form.cleaned_data['autore'])
+            url = wiki_url_api % (dizionarioLingua.get(form.cleaned_data['wikipedia']), form.cleaned_data['limite'], str(autoreDaCercare).replace(" ","%"))
+            link = wiki_link % dizionarioLingua.get(form.cleaned_data['wikipedia'])
             dati = urllib2.urlopen(url.encode('utf-8')).read()
             valori = JSONDecoder().decode(dati)
             risultati = valori['query']['search']
-            print(url)
+
     else:
         form = WikiRicerca()
 

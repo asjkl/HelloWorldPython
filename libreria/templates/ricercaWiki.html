@@ -14,12 +14,14 @@
     </form>
 
     {% if risultati %}
-        <h1>{{risultati|length %}</h1>
+        <h1>Risultati: {{ risultati|length }}</h1>
         <ul>
             {% for ris in risultati %}
                 <li> {{ris.title}}</li>
             {% endfor %}
         </ul>
+    {% elif not risultati %}
+        <h1>Nessun risultato</h1>
     {% endif %}
 {% endblock %}
 </body>
