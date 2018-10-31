@@ -10,11 +10,11 @@ from django.views.decorators.csrf import csrf_exempt
 wiki_url_api = "https://%s.wikipedia.org/w/api.php?action=query&format=json&srlimit=%s&list=search&srsearch=%s"
 wiki_link = "https://%s.wikipedia.org/wiki/"
 
-dizionarioLingua={0:"it",
-                  1:"en"}
+dizionarioLingua = {0: "it",
+                    1: "en"}
+
 
 class WikiRicerca(forms.Form):
-
     autore = forms.IntegerField(widget=forms.Select(
         choices=[(autore.pk, autore) for autore in Autore.objects.all()]
     ))
@@ -32,6 +32,7 @@ class WikiRicerca(forms.Form):
             raise forms.ValidationError("Massimo 50 risultati in Inglese")
         return self.cleaned_data['limite']
 
+
 @csrf_exempt
 def ricerca(request):
     risultati = link = None
@@ -39,7 +40,8 @@ def ricerca(request):
         form = WikiRicerca(request.POST)
         if form.is_valid():
             autoreDaCercare = Autore.objects.get(pk=form.cleaned_data['autore'])
-            url = wiki_url_api % (dizionarioLingua.get(form.cleaned_data['wikipedia']), form.cleaned_data['limite'], str(autoreDaCercare).replace(" ","%"))
+            url = wiki_url_api % (dizionarioLingua.get(form.cleaned_data['wikipedia']), form.cleaned_data['limite'],
+                                  str(autoreDaCercare).replace(" ", "%"))
             link = wiki_link % dizionarioLingua.get(form.cleaned_data['wikipedia'])
             dati = urllib2.urlopen(url.encode('utf-8')).read()
             valori = JSONDecoder().decode(dati)
