@@ -143,3 +143,4 @@ class Libro(models.Model):
     # permette di cambiare il nome nell'interfaccia dell'utente
     class Meta:
         verbose_name_plural = "Libro"
+        abstrac
