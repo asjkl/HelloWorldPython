@@ -51,17 +51,16 @@ def restituisciPerDataAcquisto(request, anno):
 
 
 def restituisciTuttiIlibriDiQuestoAutore(request, id):
-    libri = Libro.objects.filter(Autori_id=id)
+    libri = Libro.objects.filter(autore__id=id)
     autore = Autore.objects.get(pk=id)
     return render_to_response("libri.html", {
         'autore': autore,
         'libri': libri
     })
 
-
 def restituisciTuttiILibriPerQuelGenere(request, id):
     genere = get_object_or_404(Genere, pk=id)
-    libri=Libro.objects.filter(Genere__id=id)
+    libri=Libro.objects.filter(genere__id=id)
     return render_to_response("libri.html", {
         'genere': genere,
         'libri': libri
