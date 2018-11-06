@@ -183,7 +183,7 @@ class Autore(Persona):
              update_fields=None):
         if self.cognome == 'Sapia':
             raise Exception("%s: cognome non accettato!" % self.cognome)
-            super(Autore, self).save(force_insert, force_update)
+        super(Autore, self).save(force_insert, force_update)
 
 
 # Questo metodo permette di aggiungere url nei template in modo diverso
@@ -236,7 +236,7 @@ class Libro(models.Model):
 
 class Articolo(models.Model):
     titolo = models.CharField(max_length=100, unique=True, db_index=True)
-    genere = models.ForeignKey(Genere, on_delete="CASCADE")
+    genere = models.ForeignKey(Genere)
     testo = models.CharField(null=True, max_length=1000, blank=True)
     data_publicazione = models.DateField()
     autori = models.ManyToManyField(Autore)
