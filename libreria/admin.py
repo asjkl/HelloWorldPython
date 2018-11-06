@@ -12,5 +12,6 @@ admin.site.register(Autore)
 #admin.site.register(Libro, visualizzaLibriInModoOrdinato)
 admin.site.register(Libro)
 admin.site.register(Genere)
+admin.site.register(Articolo)
 
 

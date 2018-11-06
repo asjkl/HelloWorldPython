@@ -103,24 +103,99 @@ from django.db import models
 
 # OneToOneField = definisce la relazione uno a uno ed e simile concettualmente al foreignKey.
 
+########################################### MODELLI META OPTION #################################################
+# class Meta:
+#    pass
+
+# abstract = True il modello è astratto, ovvero non viene costruito nessuna tabella e ne sarà possibile costruire
+# istanze di quel modello.
+
+# db_table = Il nome della tabella all'interno del database.
+
+# db_tablespace = il nomde del trablestpace dove creare la tabella
+
+# get_latest_by = il nome del campo del modello di tipo DateField o DateTimeField
+
+# order_with_respect_to = il nome di un campo rispetto al quale il modello deve essere ordinabile
+# class Sondaggio(...):
+#    ...
+#
+# class Risposta(...):
+#    sondaggio = ForeignKey(Sondaggio)
+#    ...
+#   class Meta:
+#       order_with_respect_to = 'sondaggio'
+#
+
+# ordering = una tupla o una lista di stringhe che indica l'ordine in cui le liste di istanze del modello sono ordinate
+# di default.
+# ordering = ['-data_acquisto]
+
+# permissions = permette di definire i permessi speciali da usare nella nostra applicazione e non nell'Admin
+
+# unique_together = una tupla di tuple di nome di campo che devono essere considerati univoci nel loro insieme
+# unique_together = (('titolo', 'data_pubblicazione'))
+
+# verbose_name = il nome visualizzato nell'interfaccia di Admin al posto del nome del modello.
+
+# verbose_name_plural = serve per definire il nome plurale per i modelli
+
+################################################# METODI DEI MODELLI #################################################
+
+# get_<nomecampo>_display = permette di restituire, in un campo choices, il valore corrispondente
+
+# get_next_by_<nomecampo> / get_previous_by_<nomecampo> = se non hanno null=True, restituiscono quello precedente e 
+# quello seguente in ordine di data per i campi DateField e DateTimeField
 
 
+# EREDITARIETA' NEI MODELLI
+# class Opera(models.Mode):
+#     titolo = models.CharField(max_length=100)
+#
+#     class Meta:
+#         abstract=True
+#
+# class Quadro(Opera):
+#     tipo = models.CharField(max_length=1, choices=(
+#         "0": "Olio",
+#         "1":"Acquarello"
+#     ))
+# Sarà possibile ereditare anche la classe Meta da quella padre. Se eredita dalla classe padre abstract=true, prima che
+# viene propagato alla classe figlia, viene settata a false
 
 
-class Autore(models.Model):
+class Persona(models.Model):
     nome = models.CharField(max_length=50, null=True, name="Nome")
     cognome = models.CharField(max_length=50, null=True, name="Cognome")
 
+    class Meta:
+        abstract = True
+
+
+class Autore(Persona):
     class Meta:
         verbose_name_plural = "Autore"
 
     def __unicode__(self):
         return self.Nome + " " + self.Cognome
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.cognome == 'Sapia':
+            raise Exception("%s: cognome non accettato!" % self.cognome)
+            super(Autore, self).save(force_insert, force_update)
+
+
+# Questo metodo permette di aggiungere url nei template in modo diverso
+#   def get_absolute_url(self):
+#       return "/autori/%/" % self.id
+# Una volta definito, nel template html andiamo a richiamare il metodo nell'url
+# <a href = "{{autore.get_absolute_url}}"> {{autore}} </a>
+
 
 class Genere(models.Model):
-    nome = models.CharField(max_length=50, null=True, name="Nome")
-    descrizione = models.CharField(max_length=50, null=True, name="Descrizione")
+    nome = models.CharField(max_length=50, name="Nome", unique=True)
+    descrizione = models.CharField(max_length=50, name="Descrizione", db_index=True)
 
     class Meta:
         verbose_name_plural = "Genere"
@@ -130,17 +205,44 @@ class Genere(models.Model):
 
 
 class Libro(models.Model):
-    nome = models.CharField(max_length=50, null=True, name="Nome")
-    autore = models.ManyToManyField(Autore, name="autore")
-    genere = models.ManyToManyField(Genere, name="genere")
+    nome = models.CharField(max_length=50, name="Nome", unique=True, db_index=True)
+    # related_name = serve nel caso le classe figlie ereditano dalla padre e il nome resterebbe quello padre
+    autore = models.ManyToManyField(Autore, name="autore", related_name="%(class)s_di_autore")
+    genere = models.ManyToManyField(Genere, name="genere", related_name="%(class)s_di_genere")
     dataPubblicazione = models.DateField(null=True, name="Data")
     dataAcquisto = models.DateField(null=True, name="Data_acquisto")
 
     # serve per vedere meglio l'output dei nostri oggetti
+    # in alternativa possiamo utilizzare __str__ ma unicode, se non presente str, lo crea automaticamente
     def __unicode__(self):
         return self.Nome
 
     # permette di cambiare il nome nell'interfaccia dell'utente
     class Meta:
         verbose_name_plural = "Libro"
-        abstrac
+
+    # TODO (!) PROBLEMA unsupported format character '/' (0x2f) at index 7 e non funziona!!!!
+    # @models.permalink
+    # def get_absolute_url(self):
+    #    return ("libreria.views.restiuisciLibro", [self.pk])
+
+    # grazie al decoratore permalink, riusciamo a collegare l'URL assoluto dell'oggetto al nome della vista usata
+    # per visualizzarlo senza dover ripetere in più di un punto l'informazione relativa all'URL.
+    def get_absolute_url(self):
+        return ("libreria.views.restituisciPerDataAcquisto", (), {
+            "anno": self.dataAcquisto.year
+        })
+
+
+class Articolo(models.Model):
+    titolo = models.CharField(max_length=100, unique=True, db_index=True)
+    genere = models.ForeignKey(Genere, on_delete="CASCADE")
+    testo = models.CharField(null=True, max_length=1000, blank=True)
+    data_publicazione = models.DateField()
+    autori = models.ManyToManyField(Autore)
+
+    def __unicode__(self):
+        return self.titolo
+
+    class Meta:
+        verbose_name_plural = 'Articolo'

@@ -31,23 +31,58 @@ list_id_autori.append(a1.id)
 list_id_autori.append(a2.id)
 list_id_autori.append(a3.id)
 
-list_id_generi=[]
+list_id_generi = []
 list_id_generi.append(g1.id)
 list_id_generi.append(g2.id)
 list_id_generi.append(g3.id)
 list_id_generi.append(g4.id)
 list_id_generi.append(g5.id)
 
-#for x in list_id_autori:
+# for x in list_id_autori:
 #    print x
 
 l1 = Libro(Nome="Libro1")
 l1.save()
-l1.autore.save(a1,a2,a3)
-l1.genere.save(g2,g3)
+l1.autore.save(a1, a2, a3)
+l1.genere.save(g2, g3)
 
-#Autore.objects.all()                                                    #RESTITUISCI TUTTI GLI AUTORI
-#for a in Autore.object.all().order_by("descrizione")                    #ORDINAMI TUTTI GLI AUTORI PER "descrizione"
-#for a in Autore.object.all().filter(cognome__contains="o")              #VISUALIZZA TUTTI I COGNOMI CHE CONTENGONO "o"
-#for a in Autore.object.all().filter(autore__cognome="Sapia")            #VISUALIZZA TUTTI GLI AUTORI CHE HANNO COME
-#Libro.objects.filter().values_list('pk', flat=True)                     #DAMMI SOLO TUTTI I PK DEI LIBRI
+# Autore.objects.all()                                                    #RESTITUISCI TUTTI GLI AUTORI
+# for a in Autore.object.all().order_by("descrizione")                    #ORDINAMI TUTTI GLI AUTORI PER "descrizione"
+# for a in Autore.object.all().filter(cognome__contains="o")              #VISUALIZZA TUTTI I COGNOMI CHE CONTENGONO "o"
+# for a in Autore.object.all().filter(autore__cognome="Sapia")            #VISUALIZZA TUTTI GLI AUTORI CHE HANNO COME
+# Libro.objects.filter().values_list('pk', flat=True)                     #DAMMI SOLO TUTTI I PK DEI LIBRI
+
+# LEGGERE GLI OGGETTI
+# Libro.objects.all()                                                     #objects è un manager
+# Genere.objects.filter(descrizione="romanzo")
+# Genere.objects.exclude(descrizione="romanzo")
+# Libro.objects.filter(nome__contains="i)
+# Libro.objects.filter(nome__contains="i").filter(nome__contains="n")     # AND logico tra i due filter
+# Libro.objects.filter(nome__contains="n", autore__cognome="Ellroy")
+# Libro.objects.filter(titolo__startswith="L")
+
+# Libro.objects.filter(Cognome__startswith="S")
+# Libro.objects.filter(autore__Cognome__startswith="S")
+# Libro.objects.filter(autori__Nome__startswith="f").filter(autori__Cognome__startswith="w")
+  # ANDIAMO A PRENDERE TUTTI I LIBRI DOVE UN AUTORE HA UN NOME CHE INIZIA CON "F" MENTRE L'ALTRO CON IL COGNOME CHE INIZIA PER "w"
+
+# Libro.objects.get(pk=1)
+# Libro.objects.filter(Nome__contains="i")[:1]
+
+
+#TODO PROVARE A GIOCARE CON IL DELETE
+# a1=Autore.objects.filter(Nome="Giovanni")
+# a1.delete()
+###########################################
+# Autore.objects.all().delete()
+
+#TODO PROVARE A MODIFICARE UN AUTORE
+
+
+
+
+
+
+
+
+
