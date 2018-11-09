@@ -75,6 +75,8 @@ l1.genere.save(g2, g3)
 ###########################################
 # Autore.objects.all().delete()
 
+# Autore.objects.filter(pk=63).delete()                                      # FILTRO L'AUTORE E LO ELIMINO
+
 # TODO MODIFICATO, MA NON VA IN UN MODO!!
 # a1=Autore.objects.values_list('pk', flat=True)                             # MI TROVO TUTTI I PK DEGLI AUTORI
 # Autore.objects.filter(pk=60).update(Cognome="ciccio")
@@ -84,7 +86,7 @@ l1.genere.save(g2, g3)
 
 # Genere.objects.filter(Descrizione="").update(Descrizione="nullo")          # UPDATE SU PIÙ OGGETTI IN CONTEMPORANEA
 
-#PUÒ ESSERE IMPORTANTE [PICKLE]#
+# PUÒ ESSERE IMPORTANTE [PICKLE]#
 # import pickle
 # s = pickle.dumps(Genere.objects.all())
 # print(s)
@@ -109,10 +111,33 @@ l1.genere.save(g2, g3)
 
 # Genere.objects.values_list()                                      # RESTITUISCE UN ELENCO DI TUPLE
 
+# Autore.objects.extra(where = ["id in (59)"])
+
+# Autore.objects.get_or_create(Nome="Pippo", Cognome="Pippo")       # PERMETTE DI CREARE UN ATTORE SE NON È PRESENTE
+
+# Autore.objects.get_or_create(Nome="Grillo", defaults={'Nome':"Ciccio"})  # SE È PRESENTE UN AUTORE CON NOME "GRILLO" LO RESTITUISCE
+# ALTRIMENTI VIENE CREATO UN AUTORE CON NOME CICCIO
+
+# Autore.objects.latest('Cognome')
+# Autore.objects.latest()
+
+# Autore.objects.filter(Cognome__exact=None)
+# Autore.objects.filter(Cognome__isnull=True)
+# Autore.objects.filter(Cognome__iexact="SAPIA")
+
+# from django.db.models import Q
+# q_1=Q(Cognome__contains="p")
+# q_2=Q(Cognome__contains="p")
+# a=Autore.objects.filter(q_inizio & q_finale)
+
+# libro = Libro.objects.get(Nome="pepp")
+# tuttiAutori = Autore.objects.filter(libro_di_autore=libro.pk)
+# tuttiAutori
+
+# autore.libro_di_autore.all()
+# autore.articoli_scritti.all()
 
 
-
-
-
-
-
+# TODO NON FUNZIONA LA QUERY
+# c=Autore.objects.extra(select = {'nomi': 'SELECT "libreria_autore"."Nome" FROM "libreria_autore" WHERE "libreria_autore"."id"=59 '})
+# c=Autore.objects.extra(select = {'nomi': 'SELECT COUNT(*) FROM libreria_autore WHERE libreria_autore.id=59 '})

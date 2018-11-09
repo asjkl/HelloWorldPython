@@ -165,25 +165,29 @@ from django.db import models
 
 
 class Persona(models.Model):
+    # TODO SETTARE VALORE DI DEFAULT
     nome = models.CharField(max_length=50, null=True, name="Nome")
     cognome = models.CharField(max_length=50, null=True, name="Cognome")
 
     class Meta:
         abstract = True
 
+    # def save(self, force_insert=False, force_update=False, using=None,
+    #          update_fields=None):
+    #     if self.cognome == 'Sapia':
+    #         raise Exception("%s: cognome non accettato!" % self.cognome)
+    #         super(Autore, self).save(force_insert, force_update)
+
 
 class Autore(Persona):
     class Meta:
         verbose_name_plural = "Autore"
 
-    def __unicode__(self):
-        return self.Nome + " " + self.Cognome
+    # def __unicode__(self):
+    #     return self.Nome + " " + self.Cognome
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        if self.cognome == 'Sapia':
-            raise Exception("%s: cognome non accettato!" % self.cognome)
-        super(Autore, self).save(force_insert, force_update)
+    class Meta:
+        get_latest_by = 'Cognome'
 
 
 # Questo metodo permette di aggiungere url nei template in modo diverso
@@ -194,7 +198,7 @@ class Autore(Persona):
 
 
 class Genere(models.Model):
-    nome = models.CharField(max_length=50, name="Nome", unique=True)
+    nome = models.CharField(max_length=50, name="Nome")
     descrizione = models.CharField(max_length=50, name="Descrizione", db_index=True)
 
     class Meta:
@@ -236,10 +240,10 @@ class Libro(models.Model):
 
 class Articolo(models.Model):
     titolo = models.CharField(max_length=100, unique=True, db_index=True)
-    genere = models.ForeignKey(Genere)
+    genere = models.ForeignKey(Genere, null=True)
     testo = models.CharField(null=True, max_length=1000, blank=True)
-    data_publicazione = models.DateField()
-    autori = models.ManyToManyField(Autore)
+    data_publicazione = models.DateField(null=True)
+    autori = models.ManyToManyField(Autore, related_name="articoli_scritti")
 
     def __unicode__(self):
         return self.titolo
