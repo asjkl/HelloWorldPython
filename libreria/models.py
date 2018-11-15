@@ -163,6 +163,16 @@ from django.db import models
 # Sarà possibile ereditare anche la classe Meta da quella padre. Se eredita dalla classe padre abstract=true, prima che
 # viene propagato alla classe figlia, viene settata a false
 
+class AutoreManager(models.Manager):
+    def quanti_libri(self):
+        autori = [autore for autore in self.all()]
+        for autore in autori:
+            autore.quanti_libri_scritti = Libro.objects.filter(autore=autore).count()
+        return autori
+        #for autore in Autore.object.quanti_libri():
+        #   print autore.quanti_libri_scritti, autore.Nome
+
+
 
 class Persona(models.Model):
     # TODO SETTARE VALORE DI DEFAULT
@@ -180,6 +190,8 @@ class Persona(models.Model):
 
 
 class Autore(Persona):
+    object = AutoreManager()
+
     class Meta:
         verbose_name_plural = "Autore"
 
@@ -240,7 +252,7 @@ class Libro(models.Model):
 
 class Articolo(models.Model):
     titolo = models.CharField(max_length=100, unique=True, db_index=True)
-    genere = models.ForeignKey(Genere, null=True)
+    genere = models.ForeignKey(Genere, null=True, blank=True)
     testo = models.CharField(null=True, max_length=1000, blank=True)
     data_publicazione = models.DateField(null=True)
     autori = models.ManyToManyField(Autore, related_name="articoli_scritti")
