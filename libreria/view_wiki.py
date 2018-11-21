@@ -1,4 +1,5 @@
-import urllib2  # LIBRERIA CHE PERMETTE DI FARE RICHIESTA AD UN WEB SERVER
+from urllib.request import urlopen  # LIBRERIA CHE PERMETTE DI FARE RICHIESTA AD UN WEB SERVER
+from urllib.parse   import quote
 from libreria.models import Autore, Libro, Genere
 from django import forms
 from django.shortcuts import get_object_or_404
@@ -16,7 +17,7 @@ dizionarioLingua = {0: "it",
 
 class WikiRicerca(forms.Form):
     autore = forms.IntegerField(widget=forms.Select(
-        choices=[(autore.pk, autore) for autore in Autore.objects.all()]
+        choices=[(autore.pk, autore) for autore in Autore.object.all()]
     ))
 
     wikipedia = forms.IntegerField(widget=forms.RadioSelect(
@@ -39,14 +40,13 @@ def ricerca(request):
     if request.method == 'POST':
         form = WikiRicerca(request.POST)
         if form.is_valid():
-            autoreDaCercare = Autore.objects.get(pk=form.cleaned_data['autore'])
+            autoreDaCercare = Autore.object.get(pk=form.cleaned_data['autore'])
             url = wiki_url_api % (dizionarioLingua.get(form.cleaned_data['wikipedia']), form.cleaned_data['limite'],
                                   str(autoreDaCercare).replace(" ", "%"))
             link = wiki_link % dizionarioLingua.get(form.cleaned_data['wikipedia'])
-            dati = urllib2.urlopen(url.encode('utf-8')).read()
+            dati = urlopen(url).read().decode('utf-8')
             valori = JSONDecoder().decode(dati)
             risultati = valori['query']['search']
-
     else:
         form = WikiRicerca()
 

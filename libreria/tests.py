@@ -43,8 +43,8 @@ list_id_generi.append(g5.id)
 
 l1 = Libro(Nome="Libro1")
 l1.save()
-l1.autore.save(a1, a2, a3)
-l1.genere.save(g2, g3)
+l1.autore.add(a1, a2, a3)
+l1.genere.add(g2, g3)
 
 # Autore.objects.all()                                                    #RESTITUISCI TUTTI GLI AUTORI
 # for a in Autore.object.all().order_by("descrizione")                    #ORDINAMI TUTTI GLI AUTORI PER "descrizione"

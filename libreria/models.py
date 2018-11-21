@@ -188,15 +188,14 @@ class Persona(models.Model):
     #         raise Exception("%s: cognome non accettato!" % self.cognome)
     #         super(Autore, self).save(force_insert, force_update)
 
-
 class Autore(Persona):
     object = AutoreManager()
 
     class Meta:
         verbose_name_plural = "Autore"
 
-    # def __unicode__(self):
-    #     return self.Nome + " " + self.Cognome
+    def __str__(self):
+        return self.Nome + " " + self.Cognome
 
     class Meta:
         get_latest_by = 'Cognome'
@@ -216,9 +215,8 @@ class Genere(models.Model):
     class Meta:
         verbose_name_plural = "Genere"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.Nome
-
 
 class Libro(models.Model):
     nome = models.CharField(max_length=50, name="Nome", unique=True, db_index=True)
@@ -249,10 +247,12 @@ class Libro(models.Model):
             "anno": self.dataAcquisto.year
         })
 
+    def __str__(self):
+        return self.Nome
 
 class Articolo(models.Model):
     titolo = models.CharField(max_length=100, unique=True, db_index=True)
-    genere = models.ForeignKey(Genere, null=True, blank=True)
+    genere = models.ForeignKey(Genere, null=True, blank=True, on_delete=models.CASCADE)
     testo = models.CharField(null=True, max_length=1000, blank=True)
     data_publicazione = models.DateField(null=True)
     autori = models.ManyToManyField(Autore, related_name="articoli_scritti")

@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404  # SERVE A RITORNARE NELLA PAGINA
 
 def tuttiLibri(request):
     elenco = ""
-    for libri in Libro.objects.all().order_by("Nome"):
+    for libri in Libro.object.all().order_by("Nome"):
         elenco += "<br>'" + str(libri.Nome) + "' " + str(libri.Autori) + " " + str(libri.Genere) + " </br>"
     return HttpResponse(elenco)
 
@@ -25,10 +25,10 @@ def tuttiLibri(request):
 def restiuisciLibro(request, id):
     elenco = ""
     try:
-        libro = Libro.objects.get(pk=id)
+        libro = Libro.object.get(pk=id)
         elenco += "<br> " + str(libro.Nome) + " " + str(libro.Genere) + " </br>"
     except:
-        libri = Libro.objects.filter().values_list('pk', flat=True)
+        libri = Libro.object.filter().values_list('pk', flat=True)
         elenco += "Libro non presente, " \
                   "sono presenti i seguenti libri:"
         for i in libri:
@@ -52,7 +52,7 @@ def restituisciPerDataAcquisto(request, anno):
 
 def restituisciTuttiIlibriDiQuestoAutore(request, id):
     libri = Libro.objects.filter(autore__id=id)
-    autore = Autore.objects.get(pk=id)
+    autore = Autore.object.get(pk=id)
     return render_to_response("libri.html", {
         'autore': autore,
         'libri': libri
